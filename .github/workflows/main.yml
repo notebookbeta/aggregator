@@ -5,8 +5,11 @@ on:
     - cron: '0 16 * * 6'  # 北京时间每周日凌晨执行
   workflow_dispatch: # 允许手动触发
 
-permissions: write-all
-
+permissions:
+  contents: write
+  pull-requests: write
+  repository-projects: write
+    
 jobs:
   execute-script:
     runs-on: ubuntu-latest
