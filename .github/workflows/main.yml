@@ -33,10 +33,10 @@ jobs:
       
     - name: Create/Update Gist
       env:
-        GH_TOKEN: ${{ secrets.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}}
+        GH_TOKEN: ${{ secrets.PAT}}
       run: |
         cd aggregate
-        gh gist edit ${{ secrets.1ea39a0e967fa36ab24861b3c7b745fd }} --add "proxies.yaml"
-        gh gist edit ${{ secrets.1ea39a0e967fa36ab24861b3c7b745fd }} --add "subscribes.txt"
-        gh gist edit ${{ secrets.1ea39a0e967fa36ab24861b3c7b745fd }} --add "domains.txt"
-        gh gist edit ${{ secrets.1ea39a0e967fa36ab24861b3c7b745fd }} --add "valid-domains.txt"
+        gh gist edit ${{ secrets.GIST_ID }} --add "proxies.yaml"
+        gh gist edit ${{ secrets.GIST_ID }} --add "subscribes.txt"
+        gh gist edit ${{ secrets.GIST_ID }} --add "domains.txt"
+        gh gist edit ${{ secrets.GIST_ID }} --add "valid-domains.txt"
