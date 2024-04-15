@@ -2,7 +2,7 @@ name: Get Subscription Weekly
 
 on:
   schedule:
-    - cron: '45 14 * * *'  # 北京时间每两天的凌晨4点执行
+    - cron: '4 7 * * *'  # 北京时间每两天的凌晨4点执行
   workflow_dispatch: # 允许手动触发
 
 permissions:
