@@ -47,4 +47,4 @@ jobs:
       id: merge
       run: |
         cd aggregate
-        python -u subscribe/merge.py -s
+        python3 -u subscribe/merge.py -f proxies.yaml
