@@ -42,3 +42,9 @@ jobs:
         gh gist edit ${{ secrets.GIST_ID }} --add "subscribes.txt"
         gh gist edit ${{ secrets.GIST_ID }} --add "domains.txt"
         gh gist edit ${{ secrets.GIST_ID }} --add "valid-domains.txt"
+
+    - name: Merge Subscribe
+      id: merge
+      run: |
+        cd aggregate
+        python -u subscribe/merge.py -s
