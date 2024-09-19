@@ -13,8 +13,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          repository: notebookbeta/aggregator  # 确保仓库地址正确
-          ref: main
+          ref: master
          
       - name: Checkin
         uses: actions/setup-python@v5
