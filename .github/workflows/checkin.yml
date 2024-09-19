@@ -14,30 +14,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: notebookbeta/aggregator  # 确保仓库地址正确
-          ref: master
-          token: ${{ secrets.GITHUB_TOKEN }}   # 使用 GitHub 内置 token
-          fetch-depth: 1                       # 只拉取最近一次提交
-          clean: true                          # 在每次构建前清理工作区
-          persist-credentials: false           # 在后续步骤中不保留认证信息
-          ssh-strict: false                    # 禁用严格的 SSH 检查
-          fetch-tags: false 
-
-      - name: Checkout repository
-          uses: actions/checkout@v4
-          with:
-            repository: notebookbeta/aggregator
-            ref: master
-            token: ${{ secrets.GITHUB_TOKEN }}
-            fetch-depth: 1
-            clean: true
-            persist-credentials: false
-      - name: Debug fetch
-          run: |
-            git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +refs/heads/master*:refs/remotes/origin/master* +refs/tags/master*:refs/tags/master*
-          env:
-            GIT_TRACE: 1
-            GIT_CURL_VERBOSE: 1
-
+          ref: main
+         
       - name: Checkin
         uses: actions/setup-python@v5
         with:
