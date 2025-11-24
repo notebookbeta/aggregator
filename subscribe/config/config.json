@@ -1,7 +1,22 @@
 {
+  "domains": [
+    /* 你现在没有自己的机场订阅，这里可以先留空。
+       以后如果有自己的机场订阅，可以在这里加：
+       {
+         "name": "my-airport",
+         "enable": true,
+         "domain": "example.com",
+         "sub": [
+           "https://example.com/api/v1/client/subscribe?token=XXXX"
+         ],
+         "push_to": ["main"]
+       }
+    */
+  ],
+
   "crawl": {
     "enable": true,
-    "threshold": 10,
+    "threshold": 5,
     "singlelink": true,
     "persist": {
       "subs": "crawledsubs",
@@ -15,14 +30,15 @@
     },
     "telegram": {
       "enable": true,
-      "pages": 5,
+      "pages": 3,
       "exclude": "",
       "users": {
         "channel": {
           "include": "",
           "exclude": "",
           "config": {
-            "rename": ""
+            "rename": "",
+            "xxxxxx": ""
           },
           "push_to": []
         }
@@ -78,7 +94,7 @@
     ],
     "pages": [
       {
-        "enable": true,
+        "enable": false,
         "url": "",
         "include": "",
         "exclude": "",
@@ -112,16 +128,42 @@
       }
     ]
   },
-  "storage": {
-    "engine": "local",
-    "items": {
-      "crawledsubs": {
-        "folderid": "data",
-        "fileid": "crawledsubs.yaml"
+
+  "groups": {
+    "main": {
+      "emoji": true,
+      "list": true,
+      "targets": {
+        "clash": "main-clash",
+        "singbox": "main-singbox",
+        "v2ray": "main-v2ray"
       },
-      "crawledproxies": {
-        "folderid": "data",
-        "fileid": "crawledproxies.yaml"
+      "regularize": {
+        "enable": true,
+        "locate": true,
+        "residential": true,
+        "bits": 2
+      }
+    }
+  },
+
+  "storage": {
+    "engine": "gist",
+    "items": {
+      "main-clash": {
+        "username": "notebookbeta",
+        "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
+        "filename": "clash.yaml"
+      },
+      "main-singbox": {
+        "username": "notebookbeta",
+        "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
+        "filename": "singbox.json"
+      },
+      "main-v2ray": {
+        "username": "notebookbeta",
+        "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
+        "filename": "v2ray.txt"
       }
     }
   }
