@@ -111,6 +111,8 @@ jobs:
       - name: Install
         run: pip3 install -r requirements.txt
 
+      # 1️⃣ 先跑 collect.py，使用根目录下的 my-config.json 做爬取，
+      #    并写出 data/crawledsubs.yaml（需要你的 my-config.json 里配置 crawl + storage.crawledsubs）
       - name: Collect subscriptions (crawl)
          run: |
           echo "Running collect.py with subscribe/config/config.json ..."
