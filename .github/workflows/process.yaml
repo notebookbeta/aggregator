@@ -6,28 +6,14 @@ on:
   workflow_dispatch:
 
 env:
-  # time zone
   TZ: Asia/Shanghai
 
-  # network proxy aggregate config
-  SUBSCRIBE_CONF: ${{ secrets.SUBSCRIBE_CONF }}
-
-  # token
+  # 下面这些即便是空也没关系，先保留着
   PUSH_TOKEN: ${{ secrets.PUSH_TOKEN }}
-
-  # network reachable
   REACHABLE: ${{ vars.REACHABLE }}
-
-  # not check connective
   SKIP_ALIVE_CHECK: ${{ vars.SKIP_ALIVE_CHECK }}
-
-  # skip remark
   SKIP_REMARK: ${{ vars.SKIP_REMARK }}
-
-  # workflow mode
   WORKFLOW_MODE: ${{ vars.WORKFLOW_MODE }}
-
-  # include spwcial protocols, such vless hysteria2 and hysteria
   ENABLE_SPECIAL_PROTOCOLS: ${{ vars.ENABLE_SPECIAL_PROTOCOLS }}
 
 jobs:
@@ -50,8 +36,8 @@ jobs:
       - name: Install
         run: pip3 install -r requirements.txt
 
-      - name: Process
-        run: python -u subscribe/process.py --overwrite
+      - name: Process with explicit config
+        run: python -u subscribe/process.py -s subscribe/config/my-process.json --overwrite
 
       - name: Timestamp
-        run: date
+        run: date "+%Y-%m-%d %H:%M:%S %Z"
