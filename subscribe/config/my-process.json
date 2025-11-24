@@ -1,88 +1,95 @@
 {
   "domains": [],
-
   "crawl": {
     "enable": true,
-    "exclude": "",  
-    "threshold": 5,  
-    "singlelink": true,  
-    "persist": {  
-     "subs": "crawledsubs",  
-     "proxies": "crawledproxies"  
-  },
-    "telegram": {  
-      "enable": true,  
-      "pages": 6,  
-      "exclude": "",  
-      "users": {  
-        "go4sharing": {  
-          "include": "机场,clash,订阅,节点,proxy,科学上网,v2ray,vless,trojan,socks5,ssr,白嫖",  
-          "exclude": "试用,免费,测试,失效,过期,广告,推广,加群",  
-          "config": {  
-            "rename": "TG机场源-go4sharing"  
-          },  
-          "push_to": ["12-clash"]  
-        },  
-        "ZYFXS001": {  
-          "include": "机场,clash,订阅,节点,proxy,科学上网,v2ray,vless,trojan,socks5,ssr,白嫖",  
-          "exclude": "试用,免费,测试,失效,过期,广告,推广,加群",  
-          "config": {  
-            "rename": "TG机场源-ZYFXS001"  
-          },  
-          "push_to": ["12-clash"]  
-        },  
-        "vpnfail_v2ray": {  
-          "include": "机场,clash,订阅,节点,proxy,科学上网,v2ray,vless,trojan,socks5,ssr,白嫖",  
-          "exclude": "试用,免费,测试,失效,过期,广告,推广,加群",  
-          "config": {  
-            "rename": "TG机场源-vpnfail"  
-          },  
-          "push_to": ["12-clash"]  
-        },  
-        "白嫖机场": {  
-          "include": "机场,clash,订阅,节点,proxy,科学上网,v2ray,vless,trojan,socks5,ssr,白嫖",  
-          "exclude": "试用,免费,测试,失效,过期,广告,推广,加群",  
-          "config": {  
-            "rename": "TG机场源-白嫖机场"  
-          },  
-          "push_to": ["12-clash"]  
-        }  
-      }  
-    },  
-  "groups": {
-    "xxx": {
-      "emoji": true,
-      "list": true,
-      "targets": {
-        "clash": "xxx-clash",
-        "singbox": "xxx-singbox",
-        "v2ray": "xxx-v2ray"
-      },
-      "regularize": {
-        "enable": false,
-        "locate": true,
-        "residential": true,
-        "bits": 2
+    "exclude": "",
+    "threshold": 5,
+    "singlelink": true,
+    "persist": {
+      "subs": "crawledsubs",
+      "proxies": "crawledproxies"
+    },
+    "telegram": {
+      "enable": true,
+      "pages": 6,
+      "exclude": "",
+      "users": {
+        "go4sharing": {
+          "include": "机场,clash,订阅,节点,proxy,科学上网,v2ray,vless,trojan,socks5,ssr,白嫖",
+          "exclude": "试用,免费,测试,失效,过期,广告,推广,加群",
+          "config": {
+            "rename": "TG机场源-go4sharing"
+          },
+          "push_to": [
+            "12-clash"
+          ]
+        },
+        "ZYFXS001": {
+          "include": "机场,clash,订阅,节点,proxy,科学上网,v2ray,vless,trojan,socks5,ssr,白嫖",
+          "exclude": "试用,免费,测试,失效,过期,广告,推广,加群",
+          "config": {
+            "rename": "TG机场源-ZYFXS001"
+          },
+          "push_to": [
+            "12-clash"
+          ]
+        },
+        "vpnfail_v2ray": {
+          "include": "机场,clash,订阅,节点,proxy,科学上网,v2ray,vless,trojan,socks5,ssr,白嫖",
+          "exclude": "试用,免费,测试,失效,过期,广告,推广,加群",
+          "config": {
+            "rename": "TG机场源-vpnfail"
+          },
+          "push_to": [
+            "12-clash"
+          ]
+        },
+        "白嫖机场": {
+          "include": "机场,clash,订阅,节点,proxy,科学上网,v2ray,vless,trojan,socks5,ssr,白嫖",
+          "exclude": "试用,免费,测试,失效,过期,广告,推广,加群",
+          "config": {
+            "rename": "TG机场源-白嫖机场"
+          },
+          "push_to": [
+            "12-clash"
+          ]
+        }
       }
-    }
-  },
-
-  "storage": {
-    "engine": "local",
-    "base": "https://example.com",
-    "domain": "https://example.com",
-    "items": {
-      "xxx-clash": {
-        "folderid": "data",
-        "fileid": "clash.yaml"
-      },
-      "xxx-singbox": {
-        "folderid": "data",
-        "fileid": "singbox.json"
-      },
-      "xxx-v2ray": {
-        "folderid": "data",
-        "fileid": "v2ray.txt"
+    },
+    "groups": {
+      "xxx": {
+        "emoji": true,
+        "list": true,
+        "targets": {
+          "clash": "xxx-clash",
+          "singbox": "xxx-singbox",
+          "v2ray": "xxx-v2ray"
+        },
+        "regularize": {
+          "enable": false,
+          "locate": true,
+          "residential": true,
+          "bits": 2
+        }
+      }
+    },
+    "storage": {
+      "engine": "local",
+      "base": "https://example.com",
+      "domain": "https://example.com",
+      "items": {
+        "xxx-clash": {
+          "folderid": "data",
+          "fileid": "clash.yaml"
+        },
+        "xxx-singbox": {
+          "folderid": "data",
+          "fileid": "singbox.json"
+        },
+        "xxx-v2ray": {
+          "folderid": "data",
+          "fileid": "v2ray.txt"
+        }
       }
     }
   }
