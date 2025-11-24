@@ -1,53 +1,148 @@
-{
-  "domains": [],
-
-  "crawl": {
-    "enable": false
-  },
-
-  "groups": {
-    "xxx": {
-      "emoji": true,
-      "list": true,
-      "targets": {
-        "clash": "xxx-clash",
-          "singbox": "xxx-singbox",
-          "v2ray": "xxx-v2ray"
-      },
-      "regularize": {
-        "enable": false,
-        "locate": true,
-        "residential": true,
-        "bits": 2
-      }
-    }
-  },
-
-  "storage": {
-    "engine": "local",
-    "base": "https://example.com",
-    "domain": "https://example.com",
-    "items": {
-      "xxx-clash": {
-        "folderid": "data",
-        "fileid": "clash.yaml"
-      },
-      "xxx-singbox": {
-        "folderid": "data",
-        "fileid": "singbox.json"
-      },
-      "xxx-v2ray": {
-        "folderid": "data",
-        "fileid": "v2ray.txt"
-      },
-      "crawledsubs": {
-        "folderid": "data",
-        "fileid": "crawledsubs.yaml"
-      },
-      "crawledproxies": {
-        "folderid": "data",
-        "fileid": "crawledproxies.yaml"
-      }
-    }
-  }
+{  
+  "domains": [  
+    {  
+      "name": "纯爬虫",  
+      "sub": [],  
+      "domain": "",  
+      "enable": false,  
+      "rename": "",  
+      "include": "",  
+      "exclude": "",  
+      "push_to": [],  
+      "ignorede": true,  
+      "liveness": true,  
+      "rate": 2.5,  
+      "count": 2,  
+      "coupon": "",  
+      "secure": false  
+    }  
+  ],  
+  "plan_id": 3,  
+  "package": "",  
+  "method": 1,  
+  "coupon_code": "",  
+  "chatgpt": {  
+    "enable": false,  
+    "regex": "",  
+    "operate": "IN"  
+  },  
+  "crawl": {  
+    "enable": true,  
+    "exclude": "",  
+    "threshold": 5,  
+    "singlelink": true,  
+    "persist": {  
+      "subs": "crawledsubs",  
+      "proxies": "crawledproxies"  
+    },  
+    "config": {  
+      "rename": "",  
+      "include": "",  
+      "exclude": "",  
+      "xxxxxxx": ""  
+    },  
+    "telegram": {  
+      "enable": true,  
+      "pages": 6,  
+      "exclude": "",  
+      "users": {  
+        "go4sharing": {  
+          "include": "机场,clash,订阅,节点,proxy,科学上网,v2ray,vless,trojan,socks5,ssr,白嫖",  
+          "exclude": "试用,免费,测试,失效,过期,广告,推广,加群",  
+          "config": {  
+            "rename": "TG机场源-go4sharing"  
+          },  
+          "push_to": ["clash"]  
+        },  
+        "ZYFXS001": {  
+          "include": "机场,clash,订阅,节点,proxy,科学上网,v2ray,vless,trojan,socks5,ssr,白嫖",  
+          "exclude": "试用,免费,测试,失效,过期,广告,推广,加群",  
+          "config": {  
+            "rename": "TG机场源-ZYFXS001"  
+          },  
+          "push_to": ["clash"]  
+        },  
+        "vpnfail_v2ray": {  
+          "include": "机场,clash,订阅,节点,proxy,科学上网,v2ray,vless,trojan,socks5,ssr,白嫖",  
+          "exclude": "试用,免费,测试,失效,过期,广告,推广,加群",  
+          "config": {  
+            "rename": "TG机场源-vpnfail"  
+          },  
+          "push_to": ["clash"]  
+        },  
+        "白嫖机场": {  
+          "include": "机场,clash,订阅,节点,proxy,科学上网,v2ray,vless,trojan,socks5,ssr,白嫖",  
+          "exclude": "试用,免费,测试,失效,过期,广告,推广,加群",  
+          "config": {  
+            "rename": "TG机场源-白嫖机场"  
+          },  
+          "push_to": ["clash"]  
+        }  
+      }  
+    },  
+    "google": {  
+      "enable": false,  
+      "exclude": "",  
+      "notinurl": [],  
+      "push_to": []  
+    },  
+    "github": {  
+      "enable": true,  
+      "pages": 4,  
+      "push_to": ["clash"],  
+      "exclude": "",  
+      "spams": []  
+    },  
+    "twitter": {  
+      "enable": false,  
+      "users": {}  
+    },  
+    "repositories": [],  
+    "pages": [],  
+    "scripts": []  
+  },  
+  "groups": {  
+    "12-clash": {  
+      "emoji": true,  
+      "list": true,  
+      "targets": {  
+        "clash": "clash",  
+        "singbox": "singbox",  
+        "v2ray": "v2ray"  
+      },  
+      "regularize": {  
+        "enable": true,  
+        "locate": true,  
+        "bits": 2  
+      }  
+    }  
+  },  
+  "storage": {  
+    "engine": "gist",  
+    "token": "${GIST_PAT}",  
+    "base": "https://api.github.com",  
+    "domain": "https://gist.githubusercontent.com",  
+    "items": {  
+      "clash": {  
+        "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",  
+        "filename": "clash.yaml"  
+      },  
+      "singbox": {  
+        "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",  
+        "filename": "singbox.json"  
+      },  
+      "v2ray": {  
+        "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",  
+        "filename": "v2ray.txt"  
+      },  
+      "crawledsubs": {  
+        "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",  
+        "filename": "crawledsubs.yaml"  
+      },  
+      "crawledproxies": {  
+        "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",  
+        "filename": "crawledproxies.yaml"  
+      }  
+    }  
+  }  
 }
