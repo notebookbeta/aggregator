@@ -1,9 +1,11 @@
 name: Process
+
 on:
   schedule:
     - cron: "05 03 * * *"
     - cron: "05 11 * * *"
   workflow_dispatch:
+
 
 ################################################################################
 # 原 PROCESS.YAML 代码（已全部注释，仅作备份保留）
@@ -17,53 +19,29 @@ on:
 #   workflow_dispatch:
 #
 # env:
-#   # time zone
 #   TZ: Asia/Shanghai
-#
-#   # network proxy aggregate config
 #   SUBSCRIBE_CONF: ${{ secrets.SUBSCRIBE_CONF }}
-#
-#   # token
 #   PUSH_TOKEN: ${{ secrets.PUSH_TOKEN }}
-#
-#   # network reachable
 #   REACHABLE: ${{ vars.REACHABLE }}
-#
-#   # not check connective
 #   SKIP_ALIVE_CHECK: ${{ vars.SKIP_ALIVE_CHECK }}
-#
-#   # skip remark
 #   SKIP_REMARK: ${{ vars.SKIP_REMARK }}
-#
-#   # workflow mode
 #   WORKFLOW_MODE: ${{ vars.WORKFLOW_MODE }}
-#
-#   # include spwcial protocols, such vless hysteria2 and hysteria
 #   ENABLE_SPECIAL_PROTOCOLS: ${{ vars.ENABLE_SPECIAL_PROTOCOLS }}
 #
 # jobs:
 #   process:
 #     runs-on: ubuntu-latest
-#
 #     steps:
 #       - name: Checkout
 #         uses: actions/checkout@v4
-#         with:
-#           ref: main
-#
 #       - name: Prepare
 #         uses: actions/setup-python@v5
 #         with:
 #           python-version: "3.x"
-#           architecture: "x64"
-#           cache: "pip"
-#
 #       - name: Install
 #         run: pip3 install -r requirements.txt
-#
 #       - name: Process
 #         run: python -u subscribe/process.py --overwrite
-#
 #       - name: Timestamp
 #         run: date
 
@@ -72,24 +50,14 @@ on:
 # 新 PROCESS.YAML（实际执行部分）：collect → gen_process_config → process
 ################################################################################
 
-
 env:
-  # time zone
   TZ: Asia/Shanghai
-
-  # GitHub PAT for process.py (must have gist scope)
   PUSH_TOKEN: ${{ secrets.PUSH_TOKEN }}
-
-  # 用来生成 process config 的 Gist 信息：username/gistid
   GIST_LINK: ${{ secrets.GIST_LINK }}
-
-  # network reachable / 自动测速相关
   REACHABLE: ${{ vars.REACHABLE }}
   SKIP_ALIVE_CHECK: ${{ vars.SKIP_ALIVE_CHECK }}
   SKIP_REMARK: ${{ vars.SKIP_REMARK }}
   WORKFLOW_MODE: ${{ vars.WORKFLOW_MODE }}
-
-  # include special protocols, such vless hysteria2 and hysteria
   ENABLE_SPECIAL_PROTOCOLS: ${{ vars.ENABLE_SPECIAL_PROTOCOLS }}
 
 jobs:
@@ -112,22 +80,20 @@ jobs:
       - name: Install
         run: pip3 install -r requirements.txt
 
-      # 1️⃣ 先跑 collect.py，使用根目录下的 my-config.json 做爬取，
-      #    并写出 data/crawledsubs.yaml（需要你的 my-config.json 里配置 crawl + storage.crawledsubs）
+      # 1️⃣ collect
       - name: Collect subscriptions (crawl)
-         run: |
+        run: |
           echo "Running collect.py with subscribe/config/config.json ..."
           python -u subscribe/collect.py --all --overwrite --skip
 
-
-      # 2️⃣ 用 data/crawledsubs.yaml 生成给 process.py 使用的 generated-process.json
+      # 2️⃣ 生成 process 配置
       - name: Generate process config from crawled subs
         run: |
           python -u scripts/gen_process_config.py
           echo "Generated generated-process.json:"
           cat generated-process.json
 
-      # 3️⃣ 跑 process.py：自动测速 + 生成 clash/singbox/v2ray 并推送到 Gist
+      # 3️⃣ process + 推送到 Gist
       - name: Process & push to Gist
         run: |
           python -u subscribe/process.py -s generated-process.json --overwrite
