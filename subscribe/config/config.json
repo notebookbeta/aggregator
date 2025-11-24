@@ -1,145 +1,21 @@
 {
-  "domains": [
-    /* 你现在没有自己的机场订阅，这里可以先留空。
-       以后如果有自己的机场订阅，可以在这里加：
-       {
-         "name": "my-airport",
-         "enable": true,
-         "domain": "example.com",
-         "sub": [
-           "https://example.com/api/v1/client/subscribe?token=XXXX"
-         ],
-         "push_to": ["main"]
-       }
-    */
-  ],
+  "domains": [],
 
   "crawl": {
-    "enable": true,
-    "threshold": 5,
-    "singlelink": true,
-    "persist": {
-      "subs": "crawledsubs",
-      "proxies": "crawledproxies"
-    },
-    "config": {
-      "rename": "",
-      "include": "",
-      "exclude": "",
-      "xxxxxxx": ""
-    },
-    "telegram": {
-      "enable": true,
-      "pages": 3,
-      "exclude": "",
-      "users": {
-        "channel": {
-          "include": "",
-          "exclude": "",
-          "config": {
-            "rename": "",
-            "xxxxxx": ""
-          },
-          "push_to": []
-        }
-      }
-    },
-    "google": {
-      "enable": false,
-      "exclude": "",
-      "limits": 100,
-      "notinurl": [],
-      "push_to": []
-    },
-    "yandex": {
-      "enable": false,
-      "exclude": "",
-      "within": 3,
-      "pages": 5,
-      "notinurl": [],
-      "push_to": []
-    },
-    "github": {
-      "enable": true,
-      "pages": 2,
-      "push_to": [],
-      "exclude": "",
-      "spams": []
-    },
-    "twitter": {
-      "enable": true,
-      "users": {
-        "username": {
-          "enable": true,
-          "num": 30,
-          "include": "",
-          "exclude": "",
-          "config": {
-            "rename": "",
-            "xxxxxx": ""
-          },
-          "push_to": []
-        }
-      }
-    },
-    "repositories": [
-      {
-        "enable": false,
-        "username": "",
-        "repo_name": "",
-        "commits": 3,
-        "exclude": "",
-        "push_to": []
-      }
-    ],
-    "pages": [
-      {
-        "enable": false,
-        "url": "",
-        "include": "",
-        "exclude": "",
-        "multiple": true,
-        "placeholder": "",
-        "start": 1,
-        "end": 10,
-        "config": {
-          "rename": ""
-        },
-        "push_to": []
-      }
-    ],
-    "scripts": [
-      {
-        "enable": false,
-        "script": "file#function",
-        "params": {
-          "persist": {
-            "fileid": ""
-          },
-          "any": "xxx",
-          "config": {
-            "enable": true,
-            "liveness": true,
-            "exclude": "",
-            "rename": "",
-            "push_to": []
-          }
-        }
-      }
-    ]
+    "enable": false
   },
 
   "groups": {
-    "main": {
+    "xxx": {
       "emoji": true,
       "list": true,
       "targets": {
-        "clash": "main-clash",
-        "singbox": "main-singbox",
-        "v2ray": "main-v2ray"
+        "clash": "xxx-clash",
+          "singbox": "xxx-singbox",
+          "v2ray": "xxx-v2ray"
       },
       "regularize": {
-        "enable": true,
+        "enable": false,
         "locate": true,
         "residential": true,
         "bits": 2
@@ -148,22 +24,29 @@
   },
 
   "storage": {
-    "engine": "gist",
+    "engine": "local",
+    "base": "https://example.com",
+    "domain": "https://example.com",
     "items": {
-      "main-clash": {
-        "username": "notebookbeta",
-        "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
-        "filename": "clash.yaml"
+      "xxx-clash": {
+        "folderid": "data",
+        "fileid": "clash.yaml"
       },
-      "main-singbox": {
-        "username": "notebookbeta",
-        "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
-        "filename": "singbox.json"
+      "xxx-singbox": {
+        "folderid": "data",
+        "fileid": "singbox.json"
       },
-      "main-v2ray": {
-        "username": "notebookbeta",
-        "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
-        "filename": "v2ray.txt"
+      "xxx-v2ray": {
+        "folderid": "data",
+        "fileid": "v2ray.txt"
+      },
+      "crawledsubs": {
+        "folderid": "data",
+        "fileid": "crawledsubs.yaml"
+      },
+      "crawledproxies": {
+        "folderid": "data",
+        "fileid": "crawledproxies.yaml"
       }
     }
   }
