@@ -1,0 +1,45 @@
+{
+  "domains": [],
+
+  "crawl": {
+    "enable": false
+  },
+
+  "groups": {
+    "xxx": {
+      "emoji": true,
+      "list": true,
+      "targets": {
+        "clash": "xxx-clash",
+        "singbox": "xxx-singbox",
+        "v2ray": "xxx-v2ray"
+      },
+      "regularize": {
+        "enable": false,
+        "locate": true,
+        "residential": true,
+        "bits": 2
+      }
+    }
+  },
+
+  "storage": {
+    "engine": "local",
+    "base": "https://example.com",
+    "domain": "https://example.com",
+    "items": {
+      "xxx-clash": {
+        "folderid": "data",
+        "fileid": "clash.yaml"
+      },
+      "xxx-singbox": {
+        "folderid": "data",
+        "fileid": "singbox.json"
+      },
+      "xxx-v2ray": {
+        "folderid": "data",
+        "fileid": "v2ray.txt"
+      }
+    }
+  }
+}
