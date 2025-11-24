@@ -1,63 +1,33 @@
 name: Process
-
 on:
   schedule:
     - cron: "05 03 * * *"
     - cron: "05 11 * * *"
   workflow_dispatch:
 
-
-################################################################################
-# 原 PROCESS.YAML 代码（已全部注释，仅作备份保留）
-################################################################################
-
-# name: Process
-# on:
-#   schedule:
-#     - cron: "05 03 * * *"
-#     - cron: "05 11 * * *"
-#   workflow_dispatch:
-#
-# env:
-#   TZ: Asia/Shanghai
-#   SUBSCRIBE_CONF: ${{ secrets.SUBSCRIBE_CONF }}
-#   PUSH_TOKEN: ${{ secrets.PUSH_TOKEN }}
-#   REACHABLE: ${{ vars.REACHABLE }}
-#   SKIP_ALIVE_CHECK: ${{ vars.SKIP_ALIVE_CHECK }}
-#   SKIP_REMARK: ${{ vars.SKIP_REMARK }}
-#   WORKFLOW_MODE: ${{ vars.WORKFLOW_MODE }}
-#   ENABLE_SPECIAL_PROTOCOLS: ${{ vars.ENABLE_SPECIAL_PROTOCOLS }}
-#
-# jobs:
-#   process:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout
-#         uses: actions/checkout@v4
-#       - name: Prepare
-#         uses: actions/setup-python@v5
-#         with:
-#           python-version: "3.x"
-#       - name: Install
-#         run: pip3 install -r requirements.txt
-#       - name: Process
-#         run: python -u subscribe/process.py --overwrite
-#       - name: Timestamp
-#         run: date
-
-
-################################################################################
-# 新 PROCESS.YAML（实际执行部分）：collect → gen_process_config → process
-################################################################################
-
 env:
+  # time zone
   TZ: Asia/Shanghai
+
+  # network proxy aggregate config
+  SUBSCRIBE_CONF: ${{ secrets.SUBSCRIBE_CONF }}
+
+  # token
   PUSH_TOKEN: ${{ secrets.PUSH_TOKEN }}
-  GIST_LINK: ${{ secrets.GIST_LINK }}
+
+  # network reachable
   REACHABLE: ${{ vars.REACHABLE }}
+
+  # not check connective
   SKIP_ALIVE_CHECK: ${{ vars.SKIP_ALIVE_CHECK }}
+
+  # skip remark
   SKIP_REMARK: ${{ vars.SKIP_REMARK }}
+
+  # workflow mode
   WORKFLOW_MODE: ${{ vars.WORKFLOW_MODE }}
+
+  # include spwcial protocols, such vless hysteria2 and hysteria
   ENABLE_SPECIAL_PROTOCOLS: ${{ vars.ENABLE_SPECIAL_PROTOCOLS }}
 
 jobs:
@@ -80,23 +50,8 @@ jobs:
       - name: Install
         run: pip3 install -r requirements.txt
 
-      # 1️⃣ collect
-      - name: Collect subscriptions (crawl)
-        run: |
-          echo "Running collect.py with subscribe/config/config.json ..."
-          python -u subscribe/collect.py --all --overwrite --skip
-
-      # 2️⃣ 生成 process 配置
-      - name: Generate process config from crawled subs
-        run: |
-          python -u scripts/gen_process_config.py
-          echo "Generated generated-process.json:"
-          cat generated-process.json
-
-      # 3️⃣ process + 推送到 Gist
-      - name: Process & push to Gist
-        run: |
-          python -u subscribe/process.py -s generated-process.json --overwrite
+      - name: Process
+        run: python -u subscribe/process.py --overwrite
 
       - name: Timestamp
-        run: date "+%Y-%m-%d %H:%M:%S %Z"
+        run: date
