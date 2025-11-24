@@ -1,4 +1,10 @@
 name: Process
+on:
+  schedule:
+    - cron: "05 03 * * *"
+    - cron: "05 11 * * *"
+  workflow_dispatch:
+
 ################################################################################
 # 原 PROCESS.YAML 代码（已全部注释，仅作备份保留）
 ################################################################################
@@ -66,12 +72,6 @@ name: Process
 # 新 PROCESS.YAML（实际执行部分）：collect → gen_process_config → process
 ################################################################################
 
-#name: Process
-on:
-  schedule:
-    - cron: "05 03 * * *"
-    - cron: "05 11 * * *"
-  workflow_dispatch:
 
 env:
   # time zone
