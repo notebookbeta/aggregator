@@ -81,9 +81,6 @@
     },
     "storage": {
       "engine": "gist",
-      "token": "${GIST_PAT}",
-      "base": "https://api.github.com",
-      "domain": "https://gist.githubusercontent.com",
       "items": {
         "sub1-clash": {
           "username": "notebookbeta",
