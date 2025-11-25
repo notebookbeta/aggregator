@@ -78,28 +78,28 @@
     "engine": "gist",
     "items": {
       "sub1-clash": {
-        "username": "notebookbeta",
-        "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
+        "username": "{{MY_GIST_USERNAME}}",
+        "gistid": "{{MY_GIST_ID}}",
         "filename": "sub1-clash.yaml"
       },
       "sub1-singbox": {
-        "username": "notebookbeta",
-        "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
+        "username": "{{MY_GIST_USERNAME}}",
+        "gistid": "{{MY_GIST_ID}}",
         "filename": "sub1-singbox.json"
       },
       "sub1-v2ray": {
-        "username": "notebookbeta",
-        "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
+        "username": "{{MY_GIST_USERNAME}}",
+        "gistid": "{{MY_GIST_ID}}",
         "filename": "sub1-v2ray.txt"
       },
       "crawledsubs": {
-        "username": "notebookbeta",
-        "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
+        "username": "{{MY_GIST_USERNAME}}",
+        "gistid": "{{MY_GIST_ID}}",
         "filename": "crawledsubs.yaml"
       },
       "crawledproxies": {
-        "username": "notebookbeta",
-        "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
+        "username": "{{MY_GIST_USERNAME}}",
+        "gistid": "{{MY_GIST_ID}}",
         "filename": "crawledproxies.yaml"
       }
     }
