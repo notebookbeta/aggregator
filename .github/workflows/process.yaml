@@ -53,5 +53,37 @@ jobs:
       - name: Process
         run: python -u subscribe/process.py -s subscribe/config/my-process.json --overwrite
 
+      - name: Fix YAML Format
+        run: |
+          echo "🔧 Fixing YAML format issues..."
+          
+          # 查找所有生成的 YAML 文件
+          file_count=0
+          fixed_count=0
+          
+          for file in $(find . -type f \( -name "*.yaml" -o -name "*.yml" \)); do
+            file_count=$((file_count + 1))
+            echo "📄 Processing: $file"
+            
+            # 检查文件是否包含问题格式
+            if grep -q "!<str>\|!<int>\|!<bool>\|!<float>" "$file"; then
+              # 修复各种 YAML 类型标签
+              sed -i 's/: !<str> /: /g' "$file"
+              sed -i 's/: !<int> /: /g' "$file"
+              sed -i 's/: !<bool> /: /g' "$file"
+              sed -i 's/: !<float> /: /g' "$file"
+              fixed_count=$((fixed_count + 1))
+              echo "✅ Fixed: $file"
+            else
+              echo "✓ No issues found: $file"
+            fi
+          done
+          
+          echo ""
+          echo "📊 Summary:"
+          echo "   Total files processed: $file_count"
+          echo "   Files fixed: $fixed_count"
+          echo "✨ Format fix completed!"
+
       - name: Timestamp
         run: date
