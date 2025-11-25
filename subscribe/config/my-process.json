@@ -21,7 +21,7 @@
             "rename": "TG机场源-go4sharing"
           },
           "push_to": [
-            "12-clash"
+            "sub1"
           ]
         },
         "ZYFXS001": {
@@ -31,7 +31,7 @@
             "rename": "TG机场源-ZYFXS001"
           },
           "push_to": [
-            "12-clash"
+            "sub1"
           ]
         },
         "vpnfail_v2ray": {
@@ -41,7 +41,7 @@
             "rename": "TG机场源-vpnfail"
           },
           "push_to": [
-            "12-clash"
+            "sub1"
           ]
         },
         "白嫖机场": {
@@ -51,19 +51,19 @@
             "rename": "TG机场源-白嫖机场"
           },
           "push_to": [
-            "12-clash"
+            "sub1"
           ]
         }
       }
     },
     "groups": {
-      "xxx": {
+      "sub1": {
         "emoji": true,
         "list": true,
         "targets": {
-          "clash": "xxx-clash",
-          "singbox": "xxx-singbox",
-          "v2ray": "xxx-v2ray"
+          "clash": "sub1-clash",
+          "singbox": "sub1-singbox",
+          "v2ray": "sub1-v2ray"
         },
         "regularize": {
           "enable": false,
@@ -74,21 +74,30 @@
       }
     },
     "storage": {
-      "engine": "local",
-      "base": "https://example.com",
-      "domain": "https://example.com",
+      "engine": "gist",
+      "token": "${GIST_PAT}",
+      "base": "https://api.github.com",
+      "domain": "https://gist.githubusercontent.com",
       "items": {
-        "xxx-clash": {
-          "folderid": "data",
-          "fileid": "clash.yaml"
+        "clash": {
+          "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
+          "filename": "clash.yaml"
         },
-        "xxx-singbox": {
-          "folderid": "data",
-          "fileid": "singbox.json"
+        "singbox": {
+          "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
+          "filename": "singbox.json"
         },
-        "xxx-v2ray": {
-          "folderid": "data",
-          "fileid": "v2ray.txt"
+        "v2ray": {
+          "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
+          "filename": "v2ray.txt"
+        },
+        "crawledsubs": {
+          "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
+          "filename": "crawledsubs.yaml"
+        },
+        "crawledproxies": {
+          "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
+          "filename": "crawledproxies.yaml"
         }
       }
     }
