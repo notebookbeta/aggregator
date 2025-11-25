@@ -1,11 +1,33 @@
 {
   "domains": [
     {
-      "name": "demo-free",
+      "name": "demo1",
       "enable": true,
       "domain": "",
       "sub": [
         "https://raw.githubusercontent.com/dongchengjie/airport/refs/heads/main/subs/merged/tested_within.yaml"
+      ],
+      "push_to": [
+        "sub1"
+      ]
+    },
+    {
+      "name": "demo2",
+      "enable": true,
+      "domain": "",
+      "sub": [
+        "https://raw.githubusercontent.com/Leon406/SubCrawler/refs/heads/main/sub/share/vless"
+      ],
+      "push_to": [
+        "sub1"
+      ]
+    },
+    {
+      "name": "demo3",
+      "enable": true,
+      "domain": "",
+      "sub": [
+        "https://raw.githubusercontent.com/Leon406/SubCrawler/refs/heads/main/sub/share/hysteria2"
       ],
       "push_to": [
         "sub1"
