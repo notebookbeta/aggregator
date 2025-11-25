@@ -1,5 +1,6 @@
 {
   "domains": [],
+
   "crawl": {
     "enable": true,
     "exclude": "",
@@ -26,9 +27,7 @@
           "config": {
             "rename": "TG机场源-go4sharing"
           },
-          "push_to": [
-            "sub1"
-          ]
+          "push_to": ["sub1"]
         },
         "ZYFXS001": {
           "include": "机场,clash,订阅,节点,proxy,科学上网,v2ray,vless,trojan,socks5,ssr,白嫖",
@@ -36,9 +35,7 @@
           "config": {
             "rename": "TG机场源-ZYFXS001"
           },
-          "push_to": [
-            "sub1"
-          ]
+          "push_to": ["sub1"]
         },
         "vpnfail_v2ray": {
           "include": "机场,clash,订阅,节点,proxy,科学上网,v2ray,vless,trojan,socks5,ssr,白嫖",
@@ -46,9 +43,7 @@
           "config": {
             "rename": "TG机场源-vpnfail"
           },
-          "push_to": [
-            "sub1"
-          ]
+          "push_to": ["sub1"]
         },
         "白嫖机场": {
           "include": "机场,clash,订阅,节点,proxy,科学上网,v2ray,vless,trojan,socks5,ssr,白嫖",
@@ -56,57 +51,57 @@
           "config": {
             "rename": "TG机场源-白嫖机场"
           },
-          "push_to": [
-            "sub1"
-          ]
+          "push_to": ["sub1"]
         }
       }
-    },
-    "groups": {
-      "sub1": {
-        "emoji": true,
-        "list": true,
-        "targets": {
-          "clash": "sub1-clash",
-          "singbox": "sub1-singbox",
-          "v2ray": "sub1-v2ray"
-        },
-        "regularize": {
-          "enable": false,
-          "locate": true,
-          "residential": true,
-          "bits": 2
-        }
+    }
+  },
+
+  "groups": {
+    "sub1": {
+      "emoji": true,
+      "list": true,
+      "targets": {
+        "clash": "sub1-clash",
+        "singbox": "sub1-singbox",
+        "v2ray": "sub1-v2ray"
+      },
+      "regularize": {
+        "enable": false,
+        "locate": true,
+        "residential": true,
+        "bits": 2
       }
-    },
-    "storage": {
-      "engine": "gist",
-      "items": {
-        "sub1-clash": {
-          "username": "notebookbeta",
-          "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
-          "filename": "sub1-clash.yaml"
-        },
-        "sub1-singbox": {
-          "username": "notebookbeta",
-          "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
-          "filename": "sub1-singbox.json"
-        },
-        "sub1-v2ray": {
-          "username": "notebookbeta",
-          "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
-          "filename": "sub1-v2ray.txt"
-        },
-        "crawledsubs": {
-          "username": "notebookbeta",
-          "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
-          "filename": "crawledsubs.yaml"
-        },
-        "crawledproxies": {
-          "username": "notebookbeta",
-          "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
-          "filename": "crawledproxies.yaml"
-        }
+    }
+  },
+
+  "storage": {
+    "engine": "gist",
+    "items": {
+      "sub1-clash": {
+        "username": "notebookbeta",
+        "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
+        "filename": "sub1-clash.yaml"
+      },
+      "sub1-singbox": {
+        "username": "notebookbeta",
+        "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
+        "filename": "sub1-singbox.json"
+      },
+      "sub1-v2ray": {
+        "username": "notebookbeta",
+        "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
+        "filename": "sub1-v2ray.txt"
+      },
+      "crawledsubs": {
+        "username": "notebookbeta",
+        "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
+        "filename": "crawledsubs.yaml"
+      },
+      "crawledproxies": {
+        "username": "notebookbeta",
+        "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
+        "filename": "crawledproxies.yaml"
       }
     }
   }
