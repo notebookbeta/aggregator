@@ -9,6 +9,8 @@ env:
   TZ: Asia/Shanghai
   SUBSCRIBE_CONF: ${{ secrets.SUBSCRIBE_CONF }}
   PUSH_TOKEN: ${{ secrets.PUSH_TOKEN }}
+  MY_GIST_USERNAME: ${{ secrets.MY_GIST_USERNAME }}
+  MY_GIST_ID: ${{ secrets.MY_GIST_ID }}
   REACHABLE: ${{ vars.REACHABLE }}
   SKIP_ALIVE_CHECK: ${{ vars.SKIP_ALIVE_CHECK }}
   SKIP_REMARK: ${{ vars.SKIP_REMARK }}
@@ -35,56 +37,32 @@ jobs:
       - name: Install
         run: pip3 install -r requirements.txt
 
-      - name: Debug - Show all JSON files
+      - name: Replace Secrets in Config
         run: |
-          echo "🔍 Searching for all JSON config files..."
-          find . -name "*.json" -type f | while read file; do
-            echo "Found: $file"
-            if grep -l "GIST" "$file" 2>/dev/null; then
-              echo "  Contains GIST references"
-            fi
-          done
-
-      - name: Replace Secrets Everywhere
-        run: |
-          echo "🔐 Aggressively replacing secrets in ALL files..."
+          echo "🔐 Replacing secrets in configuration..."
           
-          GIST_USERNAME="${{ secrets.MY_GIST_USERNAME }}"
-          GIST_ID="${{ secrets.MY_GIST_ID }}"
-          
-          if [ -z "$GIST_USERNAME" ] || [ -z "$GIST_ID" ]; then
+          if [ -z "$MY_GIST_USERNAME" ] || [ -z "$MY_GIST_ID" ]; then
             echo "❌ ERROR: Secrets not found!"
-            echo "GIST_USERNAME: $GIST_USERNAME"
-            echo "GIST_ID: ${GIST_ID:0:8}...${GIST_ID: -8}"
             exit 1
           fi
           
-          echo "✓ Username: $GIST_USERNAME"
-          echo "✓ Gist ID: ${GIST_ID:0:8}...${GIST_ID: -8}"
+          echo "✓ Username: $MY_GIST_USERNAME"
+          echo "✓ Gist ID: ${MY_GIST_ID:0:8}...${MY_GIST_ID: -8}"
           
-          # 替换所有包含占位符的文件
-          find . -type f \( -name "*.json" -o -name "*.py" -o -name "*.yaml" -o -name "*.yml" \) -exec grep -l "{{MY_GIST" {} \; | while read file; do
-            echo "📝 Replacing in: $file"
-            sed -i "s/{{MY_GIST_USERNAME}}/$GIST_USERNAME/g" "$file"
-            sed -i "s/{{MY_GIST_ID}}/$GIST_ID/g" "$file"
+          # 替换配置文件中的占位符
+          find . -type f -name "*.json" -exec grep -l "{{MY_GIST" {} \; | while read file; do
+            echo "📝 Processing: $file"
+            sed -i "s/{{MY_GIST_USERNAME}}/$MY_GIST_USERNAME/g" "$file"
+            sed -i "s/{{MY_GIST_ID}}/$MY_GIST_ID/g" "$file"
           done
           
-          # 显示替换后 my-process.json 的内容（部分）
+          # 验证替换结果
           echo ""
-          echo "📄 Config file after replacement:"
-          if [ -f "subscribe/config/my-process.json" ]; then
-            grep -A2 -B2 "gistid" subscribe/config/my-process.json | head -20
-          fi
-          
-          # 最终验证
-          echo ""
-          echo "🔍 Checking for remaining placeholders..."
-          if find . -type f -name "*.json" -exec grep -H "{{MY_GIST" {} \;; then
+          if grep -r "{{MY_GIST" . --include="*.json" 2>/dev/null; then
             echo "❌ ERROR: Placeholders still exist!"
             exit 1
-          else
-            echo "✅ All placeholders replaced!"
           fi
+          echo "✅ All placeholders replaced successfully!"
 
       - name: Process
         run: python -u subscribe/process.py -s subscribe/config/my-process.json --overwrite
@@ -98,7 +76,6 @@ jobs:
           
           for file in $(find . -type f \( -name "*.yaml" -o -name "*.yml" \)); do
             file_count=$((file_count + 1))
-            echo "📄 Processing: $file"
             
             if grep -q "!<str>\|!<int>\|!<bool>\|!<float>" "$file"; then
               sed -i 's/: !<str> /: /g' "$file"
@@ -107,16 +84,10 @@ jobs:
               sed -i 's/: !<float> /: /g' "$file"
               fixed_count=$((fixed_count + 1))
               echo "✅ Fixed: $file"
-            else
-              echo "✓ No issues found: $file"
             fi
           done
           
-          echo ""
-          echo "📊 Summary:"
-          echo "   Total files processed: $file_count"
-          echo "   Files fixed: $fixed_count"
-          echo "✨ Format fix completed!"
+          echo "📊 Total: $file_count files, Fixed: $fixed_count files"
 
       - name: Timestamp
         run: date
