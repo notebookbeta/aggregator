@@ -10,17 +10,6 @@
       "push_to": [
         "sub1"
       ]
-    },
-    {
-      "name": "collect-merged",
-      "enable": true,
-      "domain": "",
-      "sub": [
-        "https://gist.githubusercontent.com/notebookbeta/338529178051d42a893589547fe27667/raw/clash.yaml"
-      ],
-      "push_to": [
-        "sub1"
-      ]
     }
   ],
   "crawl": {
@@ -69,6 +58,9 @@
     "sub1": {
       "emoji": true,
       "list": true,
+      "format": {
+        "escape": true
+      },
       "targets": {
         "clash": "sub1-clash",
         "singbox": "sub1-singbox",
