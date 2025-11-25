@@ -15,6 +15,10 @@ env:
   # token
   PUSH_TOKEN: ${{ secrets.PUSH_TOKEN }}
 
+  # My Gist credentials
+  MY_GIST_USERNAME: ${{ secrets.MY_GIST_USERNAME }}
+  MY_GIST_ID: ${{ secrets.MY_GIST_ID }}
+
   # network reachable
   REACHABLE: ${{ vars.REACHABLE }}
 
@@ -49,6 +53,13 @@ jobs:
 
       - name: Install
         run: pip3 install -r requirements.txt
+
+      - name: Replace Secrets in Config
+        run: |
+          echo "🔐 Replacing secrets in config file..."
+          sed -i "s/{{MY_GIST_USERNAME}}/${{ secrets.MY_GIST_USERNAME }}/g" subscribe/config/my-process.json
+          sed -i "s/{{MY_GIST_ID}}/${{ secrets.MY_GIST_ID }}/g" subscribe/config/my-process.json
+          echo "✅ Secrets replaced successfully"
 
       - name: Process
         run: python -u subscribe/process.py -s subscribe/config/my-process.json --overwrite
