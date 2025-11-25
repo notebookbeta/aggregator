@@ -1,5 +1,15 @@
 {
-  "domains": [],
+  "domains": [
+    {
+      "name": "demo-free",
+      "enable": true,
+      "domain": "",
+      "sub": [
+        "https://example.com/dummy-subscription"
+      ],
+      "push_to": ["sub1"]
+    }
+  ],
 
   "crawl": {
     "enable": true,
