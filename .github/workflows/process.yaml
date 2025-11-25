@@ -53,7 +53,13 @@ jobs:
       - name: Process
         run: python -u subscribe/process.py -s subscribe/config/my-process.json --overwrite
 
-# ⭐ 自动清洗 Gist 里的 sub1-clash.yaml，把 password: !<str> 123456 变成 "123456"
+      - name: Install
+        run: pip3 install -r requirements.txt
+
+      - name: Process
+        run: python -u subscribe/process.py -s subscribe/config/my-process.json --overwrite
+
+      # ⭐ 自动清洗 Gist 里的 sub1-clash.yaml，把 password: !<str> 123456 变成 "123456"
       - name: Fix Clash YAML passwords
         run: |
           GIST_ID="YOUR_GIST_ID"
@@ -105,6 +111,9 @@ req = urllib.request.Request(
 with urllib.request.urlopen(req) as resp:
     print("Gist update status:", resp.status)
 PY
+
+      - name: Timestamp
+        run: date
 
       - name: Timestamp
         run: date
