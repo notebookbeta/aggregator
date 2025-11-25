@@ -5,12 +5,13 @@
       "enable": true,
       "domain": "",
       "sub": [
-        "https://example.com/dummy-subscription"
+        "https://raw.githubusercontent.com/freefq/free/master/v2"
       ],
-      "push_to": ["sub1"]
+      "push_to": [
+        "sub1"
+      ]
     }
   ],
-
   "crawl": {
     "enable": true,
     "exclude": "",
@@ -37,7 +38,9 @@
           "config": {
             "rename": "TG机场源-go4sharing"
           },
-          "push_to": ["sub1"]
+          "push_to": [
+            "sub1"
+          ]
         },
         "ZYFXS001": {
           "include": "机场,clash,订阅,节点,proxy,科学上网,v2ray,vless,trojan,socks5,ssr,白嫖",
@@ -45,7 +48,9 @@
           "config": {
             "rename": "TG机场源-ZYFXS001"
           },
-          "push_to": ["sub1"]
+          "push_to": [
+            "sub1"
+          ]
         },
         "vpnfail_v2ray": {
           "include": "机场,clash,订阅,节点,proxy,科学上网,v2ray,vless,trojan,socks5,ssr,白嫖",
@@ -53,7 +58,9 @@
           "config": {
             "rename": "TG机场源-vpnfail"
           },
-          "push_to": ["sub1"]
+          "push_to": [
+            "sub1"
+          ]
         },
         "白嫖机场": {
           "include": "机场,clash,订阅,节点,proxy,科学上网,v2ray,vless,trojan,socks5,ssr,白嫖",
@@ -61,12 +68,22 @@
           "config": {
             "rename": "TG机场源-白嫖机场"
           },
-          "push_to": ["sub1"]
+          "push_to": [
+            "sub1"
+          ]
         }
       }
     }
   },
-
+  "github": {
+    "enable": true,
+    "pages": 2,
+    "exclude": "",
+    "push_to": [
+      "sub1"
+    ],
+    "spams": []
+  },
   "groups": {
     "sub1": {
       "emoji": true,
@@ -84,7 +101,6 @@
       }
     }
   },
-
   "storage": {
     "engine": "gist",
     "items": {
