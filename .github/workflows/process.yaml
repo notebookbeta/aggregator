@@ -54,58 +54,101 @@ jobs:
       - name: Install
         run: pip3 install -r requirements.txt
 
-      - name: Replace Secrets in Config
+      - name: Replace Secrets in All Config Files
         run: |
-          echo "🔐 Replacing secrets in config file with Python..."
+          echo "🔐 Replacing secrets in all JSON config files..."
           python3 << 'EOF'
-          import json
           import os
+          import glob
           
-          config_path = 'subscribe/config/my-process.json'
           gist_username = os.environ.get('MY_GIST_USERNAME')
           gist_id = os.environ.get('MY_GIST_ID')
           
           if not gist_username or not gist_id:
               print("❌ Error: Environment variables not found")
+              print(f"MY_GIST_USERNAME: {gist_username}")
+              print(f"MY_GIST_ID: {gist_id}")
               exit(1)
           
-          print(f"✓ Loading config from: {config_path}")
           print(f"✓ Username: {gist_username}")
           print(f"✓ Gist ID: {gist_id[:8]}...{gist_id[-8:]}")
+          print()
           
-          # 读取配置文件
-          with open(config_path, 'r', encoding='utf-8') as f:
-              content = f.read()
+          # 查找所有 JSON 配置文件
+          json_files = glob.glob('**/*.json', recursive=True)
+          print(f"Found {len(json_files)} JSON files:")
+          for f in json_files:
+              print(f"  - {f}")
+          print()
           
-          # 检查占位符
-          placeholder_count = content.count('{{MY_GIST_USERNAME}}') + content.count('{{MY_GIST_ID}}')
-          print(f"✓ Found {placeholder_count} placeholders to replace")
+          replaced_files = 0
+          total_replacements = 0
           
-          # 替换占位符
-          content = content.replace('{{MY_GIST_USERNAME}}', gist_username)
-          content = content.replace('{{MY_GIST_ID}}', gist_id)
+          for json_file in json_files:
+              try:
+                  with open(json_file, 'r', encoding='utf-8') as f:
+                      content = f.read()
+                  
+                  # 检查是否包含占位符
+                  username_count = content.count('{{MY_GIST_USERNAME}}')
+                  id_count = content.count('{{MY_GIST_ID}}')
+                  
+                  if username_count > 0 or id_count > 0:
+                      print(f"📝 Processing: {json_file}")
+                      print(f"   Found {username_count} username placeholders")
+                      print(f"   Found {id_count} gist ID placeholders")
+                      
+                      # 替换占位符
+                      content = content.replace('{{MY_GIST_USERNAME}}', gist_username)
+                      content = content.replace('{{MY_GIST_ID}}', gist_id)
+                      
+                      # 写回文件
+                      with open(json_file, 'w', encoding='utf-8') as f:
+                          f.write(content)
+                      
+                      # 验证替换
+                      with open(json_file, 'r', encoding='utf-8') as f:
+                          verify_content = f.read()
+                      
+                      remaining_username = verify_content.count('{{MY_GIST_USERNAME}}')
+                      remaining_id = verify_content.count('{{MY_GIST_ID}}')
+                      
+                      if remaining_username > 0 or remaining_id > 0:
+                          print(f"   ❌ Failed: {remaining_username + remaining_id} placeholders remaining")
+                          exit(1)
+                      else:
+                          print(f"   ✅ Success: All placeholders replaced")
+                          replaced_files += 1
+                          total_replacements += username_count + id_count
+                      print()
+              
+              except Exception as e:
+                  print(f"   ⚠️  Error processing {json_file}: {e}")
+                  print()
           
-          # 写回文件
-          with open(config_path, 'w', encoding='utf-8') as f:
-              f.write(content)
+          print(f"📊 Summary:")
+          print(f"   Files processed: {replaced_files}")
+          print(f"   Total replacements: {total_replacements}")
           
-          # 验证替换
-          remaining = content.count('{{MY_GIST_USERNAME}}') + content.count('{{MY_GIST_ID}}')
-          if remaining > 0:
-              print(f"❌ Warning: {remaining} placeholders were not replaced!")
-              exit(1)
-          
-          # 验证 JSON 格式
-          with open(config_path, 'r', encoding='utf-8') as f:
-              config = json.load(f)
-          
-          print("✅ All placeholders replaced successfully")
-          print("✅ JSON format validated")
-          print(f"✅ Storage items configured: {len(config.get('storage', {}).get('items', {}))}")
+          if replaced_files == 0:
+              print("⚠️  Warning: No files were modified. Check if placeholders exist in config files.")
+          else:
+              print("✅ All secrets replaced successfully!")
           EOF
         env:
           MY_GIST_USERNAME: ${{ secrets.MY_GIST_USERNAME }}
           MY_GIST_ID: ${{ secrets.MY_GIST_ID }}
+
+      - name: Verify Config Before Process
+        run: |
+          echo "🔍 Verifying configuration file..."
+          if grep -r "{{MY_GIST" subscribe/config/my-process.json; then
+            echo "❌ ERROR: Placeholders still exist in config file!"
+            cat subscribe/config/my-process.json
+            exit 1
+          else
+            echo "✅ No placeholders found - config is ready"
+          fi
 
       - name: Process
         run: python -u subscribe/process.py -s subscribe/config/my-process.json --overwrite
