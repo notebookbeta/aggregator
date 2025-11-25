@@ -10,6 +10,17 @@
       "push_to": [
         "sub1"
       ]
+    },
+    {
+      "name": "collect-merged",
+      "enable": true,
+      "domain": "",
+      "sub": [
+        "https://gist.githubusercontent.com/username/gistid/raw/subscribes.txt"
+      ],
+      "push_to": [
+        "sub1"
+      ]
     }
   ],
   "crawl": {
