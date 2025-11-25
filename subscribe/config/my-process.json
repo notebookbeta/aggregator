@@ -16,7 +16,7 @@
       "enable": true,
       "domain": "",
       "sub": [
-        "https://gist.githubusercontent.com/notebookbeta/338529178051d42a893589547fe27667/raw/subscribes.txt"
+        "https://gist.githubusercontent.com/notebookbeta/338529178051d42a893589547fe27667/raw/clash.yaml"
       ],
       "push_to": [
         "sub1"
