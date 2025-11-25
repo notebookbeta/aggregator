@@ -5,7 +5,7 @@
       "enable": true,
       "domain": "",
       "sub": [
-        "https://raw.githubusercontent.com/freefq/free/master/v2"
+        "https://raw.githubusercontent.com/dongchengjie/airport/refs/heads/main/subs/merged/tested_within.yaml"
       ],
       "push_to": [
         "sub1"
