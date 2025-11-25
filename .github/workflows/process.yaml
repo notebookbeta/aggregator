@@ -6,32 +6,13 @@ on:
   workflow_dispatch:
 
 env:
-  # time zone
   TZ: Asia/Shanghai
-
-  # network proxy aggregate config
   SUBSCRIBE_CONF: ${{ secrets.SUBSCRIBE_CONF }}
-
-  # token
   PUSH_TOKEN: ${{ secrets.PUSH_TOKEN }}
-
-  # My Gist credentials
-  MY_GIST_USERNAME: ${{ secrets.MY_GIST_USERNAME }}
-  MY_GIST_ID: ${{ secrets.MY_GIST_ID }}
-
-  # network reachable
   REACHABLE: ${{ vars.REACHABLE }}
-
-  # not check connective
   SKIP_ALIVE_CHECK: ${{ vars.SKIP_ALIVE_CHECK }}
-
-  # skip remark
   SKIP_REMARK: ${{ vars.SKIP_REMARK }}
-
-  # workflow mode
   WORKFLOW_MODE: ${{ vars.WORKFLOW_MODE }}
-
-  # include spwcial protocols, such vless hysteria2 and hysteria
   ENABLE_SPECIAL_PROTOCOLS: ${{ vars.ENABLE_SPECIAL_PROTOCOLS }}
 
 jobs:
@@ -54,100 +35,55 @@ jobs:
       - name: Install
         run: pip3 install -r requirements.txt
 
-      - name: Replace Secrets in All Config Files
+      - name: Debug - Show all JSON files
         run: |
-          echo "🔐 Replacing secrets in all JSON config files..."
-          python3 << 'EOF'
-          import os
-          import glob
-          
-          gist_username = os.environ.get('MY_GIST_USERNAME')
-          gist_id = os.environ.get('MY_GIST_ID')
-          
-          if not gist_username or not gist_id:
-              print("❌ Error: Environment variables not found")
-              print(f"MY_GIST_USERNAME: {gist_username}")
-              print(f"MY_GIST_ID: {gist_id}")
-              exit(1)
-          
-          print(f"✓ Username: {gist_username}")
-          print(f"✓ Gist ID: {gist_id[:8]}...{gist_id[-8:]}")
-          print()
-          
-          # 查找所有 JSON 配置文件
-          json_files = glob.glob('**/*.json', recursive=True)
-          print(f"Found {len(json_files)} JSON files:")
-          for f in json_files:
-              print(f"  - {f}")
-          print()
-          
-          replaced_files = 0
-          total_replacements = 0
-          
-          for json_file in json_files:
-              try:
-                  with open(json_file, 'r', encoding='utf-8') as f:
-                      content = f.read()
-                  
-                  # 检查是否包含占位符
-                  username_count = content.count('{{MY_GIST_USERNAME}}')
-                  id_count = content.count('{{MY_GIST_ID}}')
-                  
-                  if username_count > 0 or id_count > 0:
-                      print(f"📝 Processing: {json_file}")
-                      print(f"   Found {username_count} username placeholders")
-                      print(f"   Found {id_count} gist ID placeholders")
-                      
-                      # 替换占位符
-                      content = content.replace('{{MY_GIST_USERNAME}}', gist_username)
-                      content = content.replace('{{MY_GIST_ID}}', gist_id)
-                      
-                      # 写回文件
-                      with open(json_file, 'w', encoding='utf-8') as f:
-                          f.write(content)
-                      
-                      # 验证替换
-                      with open(json_file, 'r', encoding='utf-8') as f:
-                          verify_content = f.read()
-                      
-                      remaining_username = verify_content.count('{{MY_GIST_USERNAME}}')
-                      remaining_id = verify_content.count('{{MY_GIST_ID}}')
-                      
-                      if remaining_username > 0 or remaining_id > 0:
-                          print(f"   ❌ Failed: {remaining_username + remaining_id} placeholders remaining")
-                          exit(1)
-                      else:
-                          print(f"   ✅ Success: All placeholders replaced")
-                          replaced_files += 1
-                          total_replacements += username_count + id_count
-                      print()
-              
-              except Exception as e:
-                  print(f"   ⚠️  Error processing {json_file}: {e}")
-                  print()
-          
-          print(f"📊 Summary:")
-          print(f"   Files processed: {replaced_files}")
-          print(f"   Total replacements: {total_replacements}")
-          
-          if replaced_files == 0:
-              print("⚠️  Warning: No files were modified. Check if placeholders exist in config files.")
-          else:
-              print("✅ All secrets replaced successfully!")
-          EOF
-        env:
-          MY_GIST_USERNAME: ${{ secrets.MY_GIST_USERNAME }}
-          MY_GIST_ID: ${{ secrets.MY_GIST_ID }}
+          echo "🔍 Searching for all JSON config files..."
+          find . -name "*.json" -type f | while read file; do
+            echo "Found: $file"
+            if grep -l "GIST" "$file" 2>/dev/null; then
+              echo "  Contains GIST references"
+            fi
+          done
 
-      - name: Verify Config Before Process
+      - name: Replace Secrets Everywhere
         run: |
-          echo "🔍 Verifying configuration file..."
-          if grep -r "{{MY_GIST" subscribe/config/my-process.json; then
-            echo "❌ ERROR: Placeholders still exist in config file!"
-            cat subscribe/config/my-process.json
+          echo "🔐 Aggressively replacing secrets in ALL files..."
+          
+          GIST_USERNAME="${{ secrets.MY_GIST_USERNAME }}"
+          GIST_ID="${{ secrets.MY_GIST_ID }}"
+          
+          if [ -z "$GIST_USERNAME" ] || [ -z "$GIST_ID" ]; then
+            echo "❌ ERROR: Secrets not found!"
+            echo "GIST_USERNAME: $GIST_USERNAME"
+            echo "GIST_ID: ${GIST_ID:0:8}...${GIST_ID: -8}"
+            exit 1
+          fi
+          
+          echo "✓ Username: $GIST_USERNAME"
+          echo "✓ Gist ID: ${GIST_ID:0:8}...${GIST_ID: -8}"
+          
+          # 替换所有包含占位符的文件
+          find . -type f \( -name "*.json" -o -name "*.py" -o -name "*.yaml" -o -name "*.yml" \) -exec grep -l "{{MY_GIST" {} \; | while read file; do
+            echo "📝 Replacing in: $file"
+            sed -i "s/{{MY_GIST_USERNAME}}/$GIST_USERNAME/g" "$file"
+            sed -i "s/{{MY_GIST_ID}}/$GIST_ID/g" "$file"
+          done
+          
+          # 显示替换后 my-process.json 的内容（部分）
+          echo ""
+          echo "📄 Config file after replacement:"
+          if [ -f "subscribe/config/my-process.json" ]; then
+            grep -A2 -B2 "gistid" subscribe/config/my-process.json | head -20
+          fi
+          
+          # 最终验证
+          echo ""
+          echo "🔍 Checking for remaining placeholders..."
+          if find . -type f -name "*.json" -exec grep -H "{{MY_GIST" {} \;; then
+            echo "❌ ERROR: Placeholders still exist!"
             exit 1
           else
-            echo "✅ No placeholders found - config is ready"
+            echo "✅ All placeholders replaced!"
           fi
 
       - name: Process
@@ -157,7 +93,6 @@ jobs:
         run: |
           echo "🔧 Fixing YAML format issues..."
           
-          # 查找所有生成的 YAML 文件
           file_count=0
           fixed_count=0
           
@@ -165,9 +100,7 @@ jobs:
             file_count=$((file_count + 1))
             echo "📄 Processing: $file"
             
-            # 检查文件是否包含问题格式
             if grep -q "!<str>\|!<int>\|!<bool>\|!<float>" "$file"; then
-              # 修复各种 YAML 类型标签
               sed -i 's/: !<str> /: /g' "$file"
               sed -i 's/: !<int> /: /g' "$file"
               sed -i 's/: !<bool> /: /g' "$file"
