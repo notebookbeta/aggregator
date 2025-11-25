@@ -56,10 +56,56 @@ jobs:
 
       - name: Replace Secrets in Config
         run: |
-          echo "🔐 Replacing secrets in config file..."
-          sed -i "s/{{MY_GIST_USERNAME}}/${{ secrets.MY_GIST_USERNAME }}/g" subscribe/config/my-process.json
-          sed -i "s/{{MY_GIST_ID}}/${{ secrets.MY_GIST_ID }}/g" subscribe/config/my-process.json
-          echo "✅ Secrets replaced successfully"
+          echo "🔐 Replacing secrets in config file with Python..."
+          python3 << 'EOF'
+          import json
+          import os
+          
+          config_path = 'subscribe/config/my-process.json'
+          gist_username = os.environ.get('MY_GIST_USERNAME')
+          gist_id = os.environ.get('MY_GIST_ID')
+          
+          if not gist_username or not gist_id:
+              print("❌ Error: Environment variables not found")
+              exit(1)
+          
+          print(f"✓ Loading config from: {config_path}")
+          print(f"✓ Username: {gist_username}")
+          print(f"✓ Gist ID: {gist_id[:8]}...{gist_id[-8:]}")
+          
+          # 读取配置文件
+          with open(config_path, 'r', encoding='utf-8') as f:
+              content = f.read()
+          
+          # 检查占位符
+          placeholder_count = content.count('{{MY_GIST_USERNAME}}') + content.count('{{MY_GIST_ID}}')
+          print(f"✓ Found {placeholder_count} placeholders to replace")
+          
+          # 替换占位符
+          content = content.replace('{{MY_GIST_USERNAME}}', gist_username)
+          content = content.replace('{{MY_GIST_ID}}', gist_id)
+          
+          # 写回文件
+          with open(config_path, 'w', encoding='utf-8') as f:
+              f.write(content)
+          
+          # 验证替换
+          remaining = content.count('{{MY_GIST_USERNAME}}') + content.count('{{MY_GIST_ID}}')
+          if remaining > 0:
+              print(f"❌ Warning: {remaining} placeholders were not replaced!")
+              exit(1)
+          
+          # 验证 JSON 格式
+          with open(config_path, 'r', encoding='utf-8') as f:
+              config = json.load(f)
+          
+          print("✅ All placeholders replaced successfully")
+          print("✅ JSON format validated")
+          print(f"✅ Storage items configured: {len(config.get('storage', {}).get('items', {}))}")
+          EOF
+        env:
+          MY_GIST_USERNAME: ${{ secrets.MY_GIST_USERNAME }}
+          MY_GIST_ID: ${{ secrets.MY_GIST_ID }}
 
       - name: Process
         run: python -u subscribe/process.py -s subscribe/config/my-process.json --overwrite
