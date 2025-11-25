@@ -9,6 +9,12 @@
       "subs": "crawledsubs",
       "proxies": "crawledproxies"
     },
+    "config": {
+      "rename": "",
+      "include": "",
+      "exclude": "",
+      "xxxxxxx": ""
+    },
     "telegram": {
       "enable": true,
       "pages": 6,
@@ -80,22 +86,27 @@
       "domain": "https://gist.githubusercontent.com",
       "items": {
         "sub1-clash": {
+          "username": "notebookbeta",
           "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
-          "filename": "clash.yaml"
+          "filename": "sub1-clash.yaml"
         },
         "sub1-singbox": {
+          "username": "notebookbeta",
           "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
-          "filename": "singbox.json"
+          "filename": "sub1-clash.yaml"
         },
         "sub1-v2ray": {
+          "username": "notebookbeta",
           "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
-          "filename": "v2ray.txt"
+          "filename": "sub1-clash.yaml"
         },
         "crawledsubs": {
+          "username": "notebookbeta",
           "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
           "filename": "crawledsubs.yaml"
         },
         "crawledproxies": {
+          "username": "notebookbeta",
           "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
           "filename": "crawledproxies.yaml"
         }
