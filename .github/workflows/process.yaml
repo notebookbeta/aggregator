@@ -9,10 +9,10 @@ env:
   # time zone
   TZ: Asia/Shanghai
 
-  # network proxy aggregate config
+  # network proxy aggregate config（如果用 -s my-process.json，这个可以暂时闲置）
   SUBSCRIBE_CONF: ${{ secrets.SUBSCRIBE_CONF }}
 
-  # token
+  # token for pushing to Gist（必须有 gist 权限）
   PUSH_TOKEN: ${{ secrets.PUSH_TOKEN }}
 
   # network reachable
@@ -27,7 +27,7 @@ env:
   # workflow mode
   WORKFLOW_MODE: ${{ vars.WORKFLOW_MODE }}
 
-  # include spwcial protocols, such vless hysteria2 and hysteria
+  # include special protocols, such vless hysteria2 and hysteria
   ENABLE_SPECIAL_PROTOCOLS: ${{ vars.ENABLE_SPECIAL_PROTOCOLS }}
 
 jobs:
@@ -55,10 +55,10 @@ jobs:
 
       # ⭐ 自动清洗 Gist 里的 sub1-clash.yaml，把 password: !<str> 123456 变成 "123456"
       - name: Fix Clash YAML passwords
+        env:
+          GIST_ID: d3cb5ffc5a85d3b8ddc7da2d80d85de7
+          USERNAME: notebookbeta
         run: |
-          GIST_ID="YOUR_GIST_ID"
-          USERNAME="YOUR_USERNAME"
-
           RAW_URL="https://gist.githubusercontent.com/${USERNAME}/${GIST_ID}/raw/sub1-clash.yaml"
 
           echo "Downloading sub1-clash.yaml..."
