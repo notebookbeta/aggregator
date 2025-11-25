@@ -9,10 +9,10 @@ env:
   # time zone
   TZ: Asia/Shanghai
 
-  # network proxy aggregate config（如果用 -s my-process.json，这个可以暂时闲置）
+  # network proxy aggregate config
   SUBSCRIBE_CONF: ${{ secrets.SUBSCRIBE_CONF }}
 
-  # token for pushing to Gist（必须有 gist 权限）
+  # token
   PUSH_TOKEN: ${{ secrets.PUSH_TOKEN }}
 
   # network reachable
@@ -27,7 +27,7 @@ env:
   # workflow mode
   WORKFLOW_MODE: ${{ vars.WORKFLOW_MODE }}
 
-  # include special protocols, such vless hysteria2 and hysteria
+  # include spwcial protocols, such vless hysteria2 and hysteria
   ENABLE_SPECIAL_PROTOCOLS: ${{ vars.ENABLE_SPECIAL_PROTOCOLS }}
 
 jobs:
@@ -52,59 +52,6 @@ jobs:
 
       - name: Process
         run: python -u subscribe/process.py -s subscribe/config/my-process.json --overwrite
-
-      # ⭐ 自动清洗 Gist 里的 sub1-clash.yaml，把 password: !<str> 123456 变成 "123456"
-      - name: Fix Clash YAML passwords
-        env:
-          GIST_ID: d3cb5ffc5a85d3b8ddc7da2d80d85de7
-          USERNAME: notebookbeta
-        run: |
-          RAW_URL="https://gist.githubusercontent.com/${USERNAME}/${GIST_ID}/raw/sub1-clash.yaml"
-
-          echo "Downloading sub1-clash.yaml..."
-          curl -L "$RAW_URL" -o sub1-clash.yaml
-
-          echo "Before fix (first 10 lines):"
-          head -n 10 sub1-clash.yaml || true
-
-          echo "Cleaning YAML..."
-          sed -E 's/password: !<str> ([0-9]+)/password: "\1"/g' sub1-clash.yaml > sub1-clash-clean.yaml
-
-          echo "After fix (first 10 lines):"
-          head -n 10 sub1-clash-clean.yaml || true
-
-          echo "Uploading cleaned YAML back to Gist with Python..."
-          python - << 'PY'
-import os, json, urllib.request
-
-gist_id = os.environ["GIST_ID"]
-token = os.environ["PUSH_TOKEN"]
-
-with open("sub1-clash-clean.yaml", "r", encoding="utf-8") as f:
-    content = f.read()
-
-data = json.dumps({
-    "files": {
-        "sub1-clash.yaml": {
-            "content": content
-        }
-    }
-}).encode("utf-8")
-
-req = urllib.request.Request(
-    f"https://api.github.com/gists/{gist_id}",
-    data=data,
-    headers={
-        "Authorization": f"token {token}",
-        "Content-Type": "application/json",
-        "Accept": "application/vnd.github+json",
-    },
-    method="PATCH",
-)
-
-with urllib.request.urlopen(req) as resp:
-    print("Gist update status:", resp.status)
-PY
 
       - name: Timestamp
         run: date
