@@ -93,12 +93,12 @@
         "sub1-singbox": {
           "username": "notebookbeta",
           "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
-          "filename": "sub1-clash.yaml"
+          "filename": "sub1-singbox.json"
         },
         "sub1-v2ray": {
           "username": "notebookbeta",
           "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
-          "filename": "sub1-clash.yaml"
+          "filename": "sub1-v2ray.txt"
         },
         "crawledsubs": {
           "username": "notebookbeta",
