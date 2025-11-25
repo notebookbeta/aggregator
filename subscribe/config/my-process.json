@@ -79,15 +79,15 @@
       "base": "https://api.github.com",
       "domain": "https://gist.githubusercontent.com",
       "items": {
-        "clash": {
+        "sub1-clash": {
           "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
           "filename": "clash.yaml"
         },
-        "singbox": {
+        "sub1-singbox": {
           "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
           "filename": "singbox.json"
         },
-        "v2ray": {
+        "sub1-v2ray": {
           "gistid": "d3cb5ffc5a85d3b8ddc7da2d80d85de7",
           "filename": "v2ray.txt"
         },
