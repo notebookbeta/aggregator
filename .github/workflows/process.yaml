@@ -49,45 +49,210 @@ jobs:
           echo "✓ Username: $MY_GIST_USERNAME"
           echo "✓ Gist ID: ${MY_GIST_ID:0:8}...${MY_GIST_ID: -8}"
           
-          # 替换配置文件中的占位符
           find . -type f -name "*.json" -exec grep -l "{{MY_GIST" {} \; | while read file; do
             echo "📝 Processing: $file"
             sed -i "s/{{MY_GIST_USERNAME}}/$MY_GIST_USERNAME/g" "$file"
             sed -i "s/{{MY_GIST_ID}}/$MY_GIST_ID/g" "$file"
           done
           
-          # 验证替换结果
-          echo ""
           if grep -r "{{MY_GIST" . --include="*.json" 2>/dev/null; then
             echo "❌ ERROR: Placeholders still exist!"
             exit 1
           fi
           echo "✅ All placeholders replaced successfully!"
 
-      - name: Process
-        run: python -u subscribe/process.py -s subscribe/config/my-process.json --overwrite
-
-      - name: Fix YAML Format
+      - name: Create YAML Fix Wrapper
         run: |
-          echo "🔧 Fixing YAML format issues..."
+          echo "🔧 Creating YAML format fix wrapper..."
+          
+          cat > fix_yaml_wrapper.py << 'EOFPYTHON'
+          #!/usr/bin/env python3
+          """
+          Wrapper script that monkey-patches YAML dump to fix type tags
+          """
+          import sys
+          import re
+          
+          # Monkey patch yaml.dump before any imports
+          def patch_yaml():
+              try:
+                  import yaml
+                  original_dump = yaml.dump
+                  
+                  def fixed_dump(*args, **kwargs):
+                      result = original_dump(*args, **kwargs)
+                      if isinstance(result, str):
+                          # Remove YAML type tags
+                          result = re.sub(r': !<str> ', ': ', result)
+                          result = re.sub(r': !<int> ', ': ', result)
+                          result = re.sub(r': !<bool> ', ': ', result)
+                          result = re.sub(r': !<float> ', ': ', result)
+                      return result
+                  
+                  yaml.dump = fixed_dump
+                  print("✓ YAML dump patched successfully", file=sys.stderr)
+              except ImportError:
+                  print("⚠ yaml module not found, skipping patch", file=sys.stderr)
+              
+              try:
+                  import ruamel.yaml
+                  # Patch ruamel.yaml if used
+                  print("✓ Found ruamel.yaml", file=sys.stderr)
+              except ImportError:
+                  pass
+          
+          # Apply patch
+          patch_yaml()
+          
+          # Now run the original script
+          if __name__ == '__main__':
+              import subprocess
+              # Pass all arguments to the original process.py
+              result = subprocess.run([sys.executable, '-u', 'subscribe/process.py'] + sys.argv[1:])
+              sys.exit(result.returncode)
+          EOFPYTHON
+          
+          chmod +x fix_yaml_wrapper.py
+          echo "✅ Wrapper created"
+
+      - name: Process
+        run: python fix_yaml_wrapper.py -s subscribe/config/my-process.json --overwrite
+
+      - name: Fix YAML Format in Generated Files
+        run: |
+          echo "🔧 Fixing YAML format in all generated files..."
           
           file_count=0
           fixed_count=0
           
-          for file in $(find . -type f \( -name "*.yaml" -o -name "*.yml" \)); do
+          # 查找所有生成的 YAML 文件
+          for file in $(find . -type f \( -name "*.yaml" -o -name "*.yml" \) ! -path "./.git/*"); do
             file_count=$((file_count + 1))
             
-            if grep -q "!<str>\|!<int>\|!<bool>\|!<float>" "$file"; then
+            # 检查是否包含问题格式
+            if grep -q "!<str>\|!<int>\|!<bool>\|!<float>" "$file" 2>/dev/null; then
+              echo "📝 Fixing: $file"
+              
+              # 修复格式
               sed -i 's/: !<str> /: /g' "$file"
               sed -i 's/: !<int> /: /g' "$file"
               sed -i 's/: !<bool> /: /g' "$file"
               sed -i 's/: !<float> /: /g' "$file"
+              
               fixed_count=$((fixed_count + 1))
-              echo "✅ Fixed: $file"
+              
+              # 显示修复后的示例
+              echo "  Sample after fix:"
+              grep "password:\|port:\|alterId:" "$file" | head -2
             fi
           done
           
-          echo "📊 Total: $file_count files, Fixed: $fixed_count files"
+          echo ""
+          echo "📊 Summary:"
+          echo "   Total YAML files: $file_count"
+          echo "   Files fixed: $fixed_count"
+          
+          if [ $fixed_count -gt 0 ]; then
+            echo "✅ Fixed $fixed_count file(s)"
+          else
+            echo "✓ No files needed fixing"
+          fi
+
+      - name: Re-upload Fixed Files to Gist
+        run: |
+          echo "📤 Re-uploading fixed YAML files to Gist..."
+          
+          # 安装依赖
+          pip install -q requests
+          
+          python3 << 'EOFPYTHON'
+          import os
+          import json
+          import requests
+          from pathlib import Path
+          
+          # 从环境变量获取配置
+          gist_id = os.environ.get('MY_GIST_ID')
+          token = os.environ.get('PUSH_TOKEN')
+          
+          if not gist_id or not token:
+              print("❌ Missing GIST_ID or PUSH_TOKEN")
+              exit(1)
+          
+          print(f"✓ Gist ID: {gist_id[:8]}...{gist_id[-8:]}")
+          
+          # 读取配置文件找到需要上传的文件
+          config_path = 'subscribe/config/my-process.json'
+          with open(config_path, 'r') as f:
+              config = json.load(f)
+          
+          storage_items = config.get('storage', {}).get('items', {})
+          
+          # 准备要更新的文件
+          files_to_update = {}
+          
+          for item_name, item_config in storage_items.items():
+              filename = item_config.get('filename', '')
+              
+              # 只处理 YAML 文件
+              if not (filename.endswith('.yaml') or filename.endswith('.yml')):
+                  continue
+              
+              # 查找对应的本地文件
+              possible_paths = [
+                  filename,
+                  f'./{filename}',
+                  f'subscribe/{filename}',
+                  f'subscribe/output/{filename}',
+              ]
+              
+              file_path = None
+              for path in possible_paths:
+                  if Path(path).exists():
+                      file_path = path
+                      break
+              
+              if not file_path:
+                  print(f"⚠️  File not found: {filename}")
+                  continue
+              
+              # 读取文件内容
+              with open(file_path, 'r', encoding='utf-8') as f:
+                  content = f.read()
+              
+              # 验证是否已修复
+              if '!<str>' in content or '!<int>' in content:
+                  print(f"⚠️  {filename} still has type tags!")
+              else:
+                  print(f"✓ {filename} format is correct")
+              
+              files_to_update[filename] = {"content": content}
+          
+          if not files_to_update:
+              print("⚠️  No YAML files found to update")
+              exit(0)
+          
+          # 更新 Gist
+          print(f"\n📤 Uploading {len(files_to_update)} file(s) to Gist...")
+          
+          url = f"https://api.github.com/gists/{gist_id}"
+          headers = {
+              "Authorization": f"token {token}",
+              "Accept": "application/vnd.github.v3+json"
+          }
+          data = {"files": files_to_update}
+          
+          response = requests.patch(url, headers=headers, json=data)
+          
+          if response.status_code == 200:
+              print("✅ Successfully updated Gist!")
+              for filename in files_to_update.keys():
+                  print(f"   ✓ {filename}")
+          else:
+              print(f"❌ Failed to update Gist: {response.status_code}")
+              print(response.text)
+              exit(1)
+          EOFPYTHON
 
       - name: Timestamp
         run: date
